@@ -58,7 +58,7 @@ function updateDisplay(){
 }
 
 function updateValue(c){
-    if(rightValue.at(0) === '0'){
+    if(rightValue === '0'){
         rightValue = c;
     }
     else{
@@ -92,6 +92,14 @@ function changeSign(){
     else if(rightValue.at(0) !== '0'){
         rightValue = '-' + rightValue;
     }
+    updateDisplay();
+}
+
+function changeFloat(){
+    if(!rightValue.includes('.')){
+        rightValue += '.';
+    }
+    updateDisplay();
 }
 
 function updateOperator(newOperator){
@@ -149,16 +157,15 @@ buttonArray.AC.addEventListener("click", () => {
     updateDisplay();
 });
 
-buttonArray['+/-'].addEventListener("click", () => {
-    changeSign();
-    updateDisplay();
-});
+buttonArray['+/-'].addEventListener("click", () => changeSign());
 
 buttonArray['+'].addEventListener("click", () => updateOperator('+'));
 buttonArray['-'].addEventListener("click", () => updateOperator('-'));
 buttonArray['*'].addEventListener("click", () => updateOperator('*'));
 buttonArray['/'].addEventListener("click", () => updateOperator('/'));
 buttonArray['='].addEventListener("click", () => updateOperator('='));
+
+buttonArray['.'].addEventListener("click", () => changeFloat());
 
 calculator.appendChild(display);
 calculator.appendChild(buttons);
