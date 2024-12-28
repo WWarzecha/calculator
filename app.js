@@ -14,31 +14,32 @@ function divide(a, b){
     return (b === 0) ? 'ERROR' : a / b;
 }
 
-let leftValue = '0';
+let leftValue = '';
 let rightValue = '0';
-let operator = '';
+let operator = null;
 let buttonArray = {};
 
 const BUTTON_VALUES = [
     'AC','DEL','+/-','+',
     '7','8','9','-',
     '4','5','6','*',
-    '1','2','3','+',
+    '1','2','3','/',
     '0','.','_','='
 ];
 
+// get string return string
 function operate(leftValue, operator, rightValue){
     leftValue = +leftValue;
     rightValue = +rightValue;
     switch(operator){
         case '+':
-            return add(leftValue, rightValue);
+            return `${add(leftValue, rightValue)}`;
         case '-':
-            return subtract(leftValue, rightValue);
+            return `${subtract(leftValue, rightValue)}`;
         case '*':
-            return multiply(leftValue, rightValue);
+            return `${multiply(leftValue, rightValue)}`;
         case '/':
-            return divide(leftValue, rightValue);
+            return `${divide(leftValue, rightValue)}`;
         default:
             return 'ERROR';
     }
@@ -63,6 +64,7 @@ function updateValue(c){
     else{
         rightValue += c;
     }
+    console.log(`left: ${leftValue}, op: ${operator}, right: ${rightValue}`);
 }
 
 function deleteFromValue(){
@@ -78,9 +80,9 @@ function deleteFromValue(){
 }
 
 function resetAll(){
-    leftValue = '0';
+    leftValue = '';
     rightValue = '0';
-    operator = '';
+    operator = null;
 }
 
 function changeSign(){
@@ -90,6 +92,26 @@ function changeSign(){
     else if(rightValue.at(0) !== '0'){
         rightValue = '-' + rightValue;
     }
+}
+
+function updateOperator(newOperator){
+    if(!leftValue){
+        leftValue = (rightValue) ? rightValue : leftValue;
+        rightValue = '';
+    }
+    else if(rightValue && operator !== '='){
+        rightValue = operate(leftValue, operator, rightValue);
+        updateDisplay();
+        if (rightValue === 'ERROR'){
+            resetAll();
+        }
+        else{
+            leftValue = rightValue;
+            rightValue = '';
+        };
+    }
+    operator = newOperator;
+    console.log(`left: ${leftValue}, op: ${operator}, right: ${rightValue}`);
 }
 
 const body = document.querySelector("body");
@@ -131,6 +153,12 @@ buttonArray['+/-'].addEventListener("click", () => {
     changeSign();
     updateDisplay();
 });
+
+buttonArray['+'].addEventListener("click", () => updateOperator('+'));
+buttonArray['-'].addEventListener("click", () => updateOperator('-'));
+buttonArray['*'].addEventListener("click", () => updateOperator('*'));
+buttonArray['/'].addEventListener("click", () => updateOperator('/'));
+buttonArray['='].addEventListener("click", () => updateOperator('='));
 
 calculator.appendChild(display);
 calculator.appendChild(buttons);
