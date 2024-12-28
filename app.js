@@ -64,12 +64,15 @@ function updateValue(c){
     else{
         rightValue += c;
     }
-    console.log(`left: ${leftValue}, op: ${operator}, right: ${rightValue}`);
+    updateDisplay();
 }
 
 function deleteFromValue(){
     if(rightValue.length === 2 && rightValue.at(0) === '-'){
-            rightValue ='0';
+            rightValue = '0';
+    }
+    if(rightValue.length === 3 && rightValue.at(2) === '.'){
+        rightValue = '0';
     }
     else if(rightValue.length > 1){
         rightValue = rightValue.slice(0, -1);
@@ -77,21 +80,27 @@ function deleteFromValue(){
     else{
         rightValue = '0';
     }
+    updateDisplay();
+}
+
+function resetValues(){
+    leftValue = '';
+    rightValue = '';
+    operator = null;
 }
 
 function resetAll(){
-    leftValue = '';
-    rightValue = '0';
-    operator = null;
+    resetValues();
+    updateDisplay();
 }
 
 function changeSign(){
     if(rightValue.at(0) === '-'){
         rightValue = rightValue.slice(1);
     }
-    else if(rightValue.at(0) !== '0'){
+    else if(rightValue.at(0) !== '0' || rightValue.at(1) === '.'){
         rightValue = '-' + rightValue;
-    }
+    };
     updateDisplay();
 }
 
@@ -111,7 +120,7 @@ function updateOperator(newOperator){
         rightValue = operate(leftValue, operator, rightValue);
         updateDisplay();
         if (rightValue === 'ERROR'){
-            resetAll();
+            resetValues();
         }
         else{
             leftValue = rightValue;
@@ -119,7 +128,6 @@ function updateOperator(newOperator){
         };
     }
     operator = newOperator;
-    console.log(`left: ${leftValue}, op: ${operator}, right: ${rightValue}`);
 }
 
 const body = document.querySelector("body");
@@ -140,22 +148,12 @@ BUTTON_VALUES.forEach(value => {
 });
 
 for(let i = 0; i <= 9; i++){
-    console.log(buttonArray[i])
-    buttonArray[i].addEventListener("click", () => {
-        updateValue(`${i}`);
-        updateDisplay();
-    });
+    buttonArray[i].addEventListener("click", () => updateValue(`${i}`));
 }
 
-buttonArray.DEL.addEventListener("click", () => {
-    deleteFromValue();
-    updateDisplay();
-});
+buttonArray.DEL.addEventListener("click", deleteFromValue);
 
-buttonArray.AC.addEventListener("click", () => {
-    resetAll();
-    updateDisplay();
-});
+buttonArray.AC.addEventListener("click", resetAll);
 
 buttonArray['+/-'].addEventListener("click", () => changeSign());
 
@@ -164,8 +162,8 @@ buttonArray['-'].addEventListener("click", () => updateOperator('-'));
 buttonArray['*'].addEventListener("click", () => updateOperator('*'));
 buttonArray['/'].addEventListener("click", () => updateOperator('/'));
 buttonArray['='].addEventListener("click", () => updateOperator('='));
-
 buttonArray['.'].addEventListener("click", () => changeFloat());
+buttonArray['_'].addEventListener("click", () => alert("I don't do anything.. Have a nice day!"));
 
 calculator.appendChild(display);
 calculator.appendChild(buttons);
