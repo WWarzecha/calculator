@@ -1,1 +1,1 @@
-# calculator
+Calculator is the final project of The Odin Project Fundations course.
